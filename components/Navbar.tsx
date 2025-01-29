@@ -21,6 +21,7 @@ function Navbar() {
                 {navIcons.map(icon => <Image key={icon.alt} src={icon.src} alt={icon.alt} width={25} height={25}/>)}
             </div>
         </nav>
+        <hr/>
     </header>
   )
 }
