@@ -42,8 +42,8 @@ function HeroCaurosal() {
             <Carousel 
             showThumbs={false}
             stopOnHover={true}
-            autoPlay
-            infiniteLoop
+            // autoPlay
+            // infiniteLoop
             interval={2000}
             showArrows={false}
             showStatus={false}
