@@ -3,7 +3,7 @@
 // Use State and Lifecycle Effects (useState(), useReducer(), useEffect(), etc)
 
 // here in this component, we are not manuallly doing any interractions to DOM.
-// We have a package inside this Caurosel which does some interactions, so we use use Client in this case.
+// We have a package inside this Caurosel which does some interactions, so we use 'use Client' in this case.
 
 
 import React from 'react'

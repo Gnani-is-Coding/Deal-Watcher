@@ -1,9 +1,24 @@
 import HeroCaurosal from '@/components/HeroCaurosal'
+import ProductCard from '@/components/ProductCard'
 import SearchBar from '@/components/SearchBar'
+import { getAllProducts } from '@/lib/actions'
 import Image from 'next/image'
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 
-function Home() {
+
+{
+  /*
+  In Next-13 > or in app direectory based nextjs, by default all componentsa r SSR.
+  they provide client with basuc HTML, CSS files, so that renderring can be fast,
+  Data fetching logic can exist inside this server side components.
+  Any client side manipulations like use of hooks, evwnt handlers are to be used in client componentas only..
+  */
+}
+
+
+async function Home() {
+  const allProducts =  await getAllProducts()
+
   return (
     <>
       <section className='px-6 md:px-20 py-24'>
@@ -35,7 +50,9 @@ function Home() {
         <h2 className='action-text'>Trending Deals</h2>
 
         <div className='flex flex-wrap gap-x-4 gap-y-16'>
-        {["Gnani", "G2", "G3"].map((product) => <p>{product}</p>)}
+        {allProducts?.map((product) => 
+          <ProductCard key={product._id} product={product}/>
+        )}
         </div>
       </section>
     </>

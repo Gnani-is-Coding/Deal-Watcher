@@ -5,6 +5,7 @@ interface PriceHistory  {
     date?: Date
 }
 export type ProductType = {
+    _id?: string;
     url: string,
     title: string,
     originalPrice: number

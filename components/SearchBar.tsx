@@ -32,8 +32,8 @@ function SearchBar() {
     try{
       setIsLoading(true)
       const scrappedData = await scrapeAndStoreProduct(inputPrompt)
-    } catch(error){
-
+    } catch(error: any){
+      console.log(`Error while searching for products ${error.message}`)
     } finally {
       setIsLoading(false)
     }
