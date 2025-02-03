@@ -1,6 +1,6 @@
 
 
-interface PriceHistory  {
+export interface PriceHistory  {
     price: number
     date?: Date
 }
@@ -22,6 +22,7 @@ export type ProductType = {
     highestPrice: number,
     averagePrice: number,
     image: string,
+    users?: []
 }
 
 export type NotificationsType =
@@ -43,3 +44,4 @@ export type EmailProductInfo = {
 title: string;
 url: string;
 };
+
