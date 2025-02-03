@@ -31,18 +31,19 @@ function SearchBar() {
 
     try{
       setIsLoading(true)
-      const scrappedData = await scrapeAndStoreProduct(inputPrompt)
+      await scrapeAndStoreProduct(inputPrompt)
     } catch(error: any){
       console.log(`Error while searching for products ${error.message}`)
     } finally {
       setIsLoading(false)
+      setSearchPrompt("")
     }
   }
   return (
     <form className='flex felx-wrap gap-4 mt-12'
       onSubmit={handleSubmit}
     >
-      <input type="text" className='searchbar-input' placeholder="Enter Product link" onChange={(e) => setSearchPrompt(e.target.value)} />
+      <input value={inputPrompt} type="text" className='searchbar-input' placeholder="Enter Product link" onChange={(e) => setSearchPrompt(e.target.value)} />
       <button type="submit" className='searchbar-btn' disabled={inputPrompt === ''}>
         {isLoading ? "Searching..." : "Search"}
       </button>

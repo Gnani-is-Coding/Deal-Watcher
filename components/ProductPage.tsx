@@ -4,18 +4,32 @@ import { ProductType } from '@/lib/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import PriceInfoCard from './ProductInfo'
 import { formatNumber } from '@/lib/utils'
 import ProductCard from './ProductCard'
 import Modal from './Modal'
+import { addUserEmailToProduct } from '@/lib/actions'
 
 type Props = {
+    prodId: string,
     productDetails: ProductType,
     similarProducts: ProductType[]
 }
-function ProductPage({ productDetails, similarProducts }: Props) {
+function ProductPage({ prodId, productDetails, similarProducts }: Props) {
     const [openModal, setOpenModal] = useState<boolean>(false)
+    const [isLoading, setLoading] = useState<boolean>(false)
+    const [inputEmail, setInputEmail] = useState('')
+
+    const handleEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setLoading(true)
+
+        await addUserEmailToProduct(prodId, inputEmail)
+        setOpenModal(false)
+        setLoading(false)
+        setInputEmail('')
+    }
 
     if (!productDetails) {
         redirect('/')
@@ -25,7 +39,7 @@ function ProductPage({ productDetails, similarProducts }: Props) {
         <>
             <div className='product-container'>
 
-                <Image src={productDetails.url} alt={productDetails.title} width={578} height={578}
+                <Image src={productDetails.image} alt={productDetails.title} width={578} height={578}
                     className='border border-gray-300 rounded-lg shadow' />
 
 
@@ -136,7 +150,11 @@ function ProductPage({ productDetails, similarProducts }: Props) {
                     </div>
                 )}
             </div>
-            <Modal isOpen={openModal} setOpenModal={setOpenModal} />
+            <Modal isOpen={openModal} setOpenModal={setOpenModal} 
+            isLoading={isLoading}
+            inputEmail={inputEmail} setInputEmail={setInputEmail}
+            handleEmailSubmit={handleEmailSubmit}
+            />
         </>
 
     )

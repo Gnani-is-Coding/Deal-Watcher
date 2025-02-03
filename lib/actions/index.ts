@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache"
 import { Product } from "../models/product.model"
 import { connectToDB } from "../mongoose"
 import { scrapeAmazonProduct } from "../scraper"
-import { ProductType } from "../types"
+import { ProductType, User } from "../types"
+import { generateEmailBody, sendEmail } from "../Nodemailer"
 
 
 {/* The presence of _id: ObjectId(), _v: keys in response frmo mongoose, are raising an issue 
@@ -98,5 +99,34 @@ export async function getSimilarProducts(prodId: string) {
         return JSON.parse(JSON.stringify(similarProduct))
     } catch(e: any) {
         console.log(`Error while getting similar products: ${e.message}`)
+    }
+}
+
+export async function addUserEmailToProduct(prodId: string, emailId: string){
+    try {
+        const product = await Product.findById(prodId)
+
+        console.log(product, "product")
+
+        if (!product) return
+
+        const existingUser = product.users?.some((user: User) => user.email === emailId)
+        console.log(existingUser, "existingUser")
+
+        if (!existingUser) {
+            product.users?.push({email: emailId})
+
+            await product.save()
+
+            const emailContent = await generateEmailBody(product, "WELCOME")
+
+            await sendEmail(emailContent, [emailId])
+        }
+        else {
+        console.log("User already exist")
+        }
+
+    } catch(e:any) {
+        console.log("Error while adding email to products",e.message)
     }
 }

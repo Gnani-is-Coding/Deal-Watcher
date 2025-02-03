@@ -15,7 +15,7 @@ async function Product({params }: IProps) {
 
   return (
     <>
-   <ProductPage productDetails={productDetails} similarProducts={similarProducts} />
+      <ProductPage prodId={prodId} productDetails={productDetails} similarProducts={similarProducts} />
     </> 
   )
 }

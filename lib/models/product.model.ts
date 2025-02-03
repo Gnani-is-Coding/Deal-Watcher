@@ -24,6 +24,7 @@ const ProductSchema = new mongoose.Schema({
     highestPrice: {type: Number, required: true},
     averagePrice: {type: Number, required: true},
     users: [
+    
         {email: {type: String, required: true},}
     ], default: [],    // how many users have serached for this product.
 }, {timestamps: true})

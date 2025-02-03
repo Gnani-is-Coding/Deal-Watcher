@@ -11,7 +11,7 @@ function ProductCard({product}: Iprops) {
     <Link href={`/products/${product._id}`} className='product-card'>
       <div className='product-card_img-container'>
 
-        <Image src={product.url} alt={product.title} width={200} height={200} className='product-card_img'/>
+        <Image src={product.image} alt={product.title} width={200} height={200} className='product-card_img'/>
         <div className='flex flex-col gap-2 '>
             <h3 className='product-title'>
               {product.title}
