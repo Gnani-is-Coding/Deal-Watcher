@@ -45,7 +45,8 @@ export async function scrapeAmazonProduct(url:string) {
 
         const description = $('#productDescription').text().trim()
         const data = {
-            url: imageUrls[0],
+            url,
+            image: imageUrls[0],
             title,
             originalPrice: Number(originalPrice) || Number(currentPrice),
             currentPrice: Number(currentPrice) || Number(originalPrice),
@@ -55,14 +56,13 @@ export async function scrapeAmazonProduct(url:string) {
             rating: 4.5,
             reviewsCount: 100,
             category: 'category',
-            description,
+            description: description || 'This is some decription about the product',
             priceHistory: [],
             lowestPrice: Number(originalPrice) || Number(currentPrice),
             highestPrice: Number(originalPrice) || Number(currentPrice),
             averagePrice: Number(originalPrice) || Number(currentPrice),
         }
         return data
-
     }catch(error: any) {
         throw new Error (`Failed to scrape product: ${error.message}`)
     }

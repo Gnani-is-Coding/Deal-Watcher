@@ -5,6 +5,7 @@ interface PriceHistory  {
     date?: Date
 }
 export type ProductType = {
+    _id?: string;
     url: string,
     title: string,
     originalPrice: number
@@ -19,5 +20,26 @@ export type ProductType = {
     priceHistory: PriceHistory[],
     lowestPrice: number,
     highestPrice: number,
-    averagePrice: number
+    averagePrice: number,
+    image: string,
 }
+
+export type NotificationsType =
+    | "WELCOME"
+  | "CHANGE_OF_STOCK"
+  | "LOWEST_PRICE"
+  | "THRESHOLD_MET";
+
+export type User {
+email: string
+}
+
+export type EmailContent = {
+subject: string;
+body: string;
+};
+  
+export type EmailProductInfo = {
+title: string;
+url: string;
+};
