@@ -1,6 +1,7 @@
+import { Notification } from "../Nodemailer";
 
 
-export interface PriceHistory  {
+export interface PriceHistory {
     price: number
     date?: Date
 }
@@ -25,23 +26,19 @@ export type ProductType = {
     users?: []
 }
 
-export type NotificationsType =
-    | "WELCOME"
-  | "CHANGE_OF_STOCK"
-  | "LOWEST_PRICE"
-  | "THRESHOLD_MET";
+export type NotificationsType = keyof typeof Notification
 
-export type User {
-email: string
+export type User = {
+    email: string
 }
 
 export type EmailContent = {
-subject: string;
-body: string;
+    subject: string;
+    body: string;
 };
-  
+
 export type EmailProductInfo = {
-title: string;
-url: string;
+    title: string;
+    url: string;
 };
 
