@@ -1,6 +1,6 @@
 import axios from "axios"
 import * as cheerio from 'cheerio' 
-import { extractPrices } from "../utils"
+import { extractPrice } from "../utils"
 
 
 export async function scrapeAmazonProduct(url:string) {
@@ -9,8 +9,8 @@ export async function scrapeAmazonProduct(url:string) {
     //BRIGHTDATA CONFIGARAITON
     const username = String(process.env.BRIGHT_DATA_USERNAME)
     const password = String(process.env.BRIGHT_DATA_PASSWORD)
-    const port = 33335
-    const session_id = (Math.floor(1000000 * Math.random())) | 0
+    const port = process.env.PORT
+    const session_id = (Math.floor(1000000 * Math.random())) | 2
     const options = {
         auth: {
             username: `{${username}-session-${session_id}}`,
@@ -26,12 +26,12 @@ export async function scrapeAmazonProduct(url:string) {
         const $ = cheerio.load(response.data)
 
         const title = $('#productTitle').text().trim()
-        const currentPrice = extractPrices(
+        const currentPrice = extractPrice(
             $('span.reinventPricePriceToPayMargin span.a-price-whole'),
             $('span.a-price-whole'),
             $('.a-price .aok-align-center span.a-offscreen')
         )
-        const originalPrice = extractPrices(
+        const originalPrice = extractPrice(
             $('span.a-price.a-text-price > span.a-offscreen')
         ) 
         const outofStock = $('#availability span').text().trim().toLowerCase() === 'currently unavailable'
@@ -43,7 +43,9 @@ export async function scrapeAmazonProduct(url:string) {
         const currency = $('span.a-price-symbol').text().trim().slice(0,1) ?? ''
         const discountRate = $('span.reinventPriceSavingsPercentageMargin').text().replace(/[-%]/g, '')
 
-        const description = $('#productDescription').text().trim()
+        const description = $('#productDescription').text().trim() || 'This is some decription about the product'
+
+        // #TODO Extract reviewCount,rating , category
         const data = {
             url,
             image: imageUrls[0],
@@ -51,12 +53,12 @@ export async function scrapeAmazonProduct(url:string) {
             originalPrice: Number(originalPrice) || Number(currentPrice),
             currentPrice: Number(currentPrice) || Number(originalPrice),
             discountRate: Number(discountRate),
-            currency: currency ?? '$',
+            currency: currency ?? '₹',
             isOutOfStock: outofStock,
             rating: 4.5,
             reviewsCount: 100,
             category: 'category',
-            description: description || 'This is some decription about the product',
+            description: description,
             priceHistory: [],
             lowestPrice: Number(originalPrice) || Number(currentPrice),
             highestPrice: Number(originalPrice) || Number(currentPrice),

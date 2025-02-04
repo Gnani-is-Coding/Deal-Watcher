@@ -1,4 +1,4 @@
-import { EmailContent, EmailProductInfo, NotificationsType, ProductType } from "../types"
+import { EmailContent, EmailProductInfo, NotificationsType } from "../types"
 import nodemailer from "nodemailer"
 
 export const Notification = {
@@ -14,6 +14,7 @@ export async function generateEmailBody(
     type: NotificationsType
     ) {
     const THRESHOLD_PERCENTAGE = 40;
+    
     // Shorten the product title
     const shortenedTitle =
       product.title.length > 20
@@ -84,8 +85,7 @@ const transport = nodemailer.createTransport({
   auth: {
     user: 'gnanendragariminti@gmail.com',
     pass: process.env.GMAIL_PASSWORD,
-  },
-  maxConnections: 1
+  }
 })
   
 // #TODO add Email sent animation or status updated message.

@@ -144,7 +144,7 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
 
                         <div className="flex flex-wrap gap-10 mt-7 w-full">
                             {similarProducts && similarProducts.map((prod) => (
-                                <ProductCard key={productDetails._id} product={prod} />
+                                <ProductCard key={prod._id} product={prod} />
                             ))}
                         </div>
                     </div>

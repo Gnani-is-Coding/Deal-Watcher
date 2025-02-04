@@ -3,7 +3,7 @@
 import { scrapeAndStoreProduct } from "@/lib/actions"
 import { FormEvent, useState } from "react"
 
-const isValidateAmazonUrl = (url: string):Boolean => {
+const isValidateAmazonUrl = (url: string): boolean => {
   try{
     const parsedUrl = new URL(url)
     const hostname = parsedUrl.hostname
@@ -11,7 +11,8 @@ const isValidateAmazonUrl = (url: string):Boolean => {
       return true
     }
   }
-  catch(error){
+   
+  catch(error){  // eslint-disable-line
     return false
 
   }

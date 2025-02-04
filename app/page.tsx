@@ -2,8 +2,9 @@ import HeroCaurosal from '@/components/HeroCaurosal'
 import ProductCard from '@/components/ProductCard'
 import SearchBar from '@/components/SearchBar'
 import { getAllProducts } from '@/lib/actions'
+import { ProductType } from '@/lib/types'
 import Image from 'next/image'
-import React, { useCallback, useMemo } from 'react'
+import React from 'react'
 
 
 {
@@ -18,6 +19,8 @@ import React, { useCallback, useMemo } from 'react'
 
 async function Home() {
   const allProducts =  await getAllProducts()
+
+  // #TODO IMPLEMENT A ERROR BOUNDARY PAGE
 
   return (
     <>
@@ -50,7 +53,7 @@ async function Home() {
         <h2 className='action-text'>Trending Deals</h2>
 
         <div className='flex flex-wrap gap-x-4 gap-y-16'>
-        {allProducts?.map((product) => 
+        {allProducts?.map((product: ProductType) => 
           <ProductCard key={product._id} product={product}/>
         )}
         </div>

@@ -5,7 +5,7 @@ import React from 'react'
 
 
 type IProps = {
-    params: {id: string}
+    params: Promise<{id: string}>
 }
 async function Product({params }: IProps) {
     const {id:prodId} = await params

@@ -18,6 +18,7 @@ export async function scrapeAndStoreProduct(prodUrl: string) {
         connectToDB()
         const scrapedProduct = await scrapeAmazonProduct(prodUrl)
         if (!scrapedProduct) return
+
         let product:ProductType = scrapedProduct
 
         {/*
@@ -30,7 +31,7 @@ export async function scrapeAndStoreProduct(prodUrl: string) {
         const existingProduct = await Product.findOne({ url: scrapedProduct.url })
         if (existingProduct) {
             const updatedPriceHistory = [
-                ...scrapedProduct.priceHistory,
+                ...existingProduct.priceHistory,
                 { price: scrapedProduct.currentPrice }
             ]
 
@@ -41,12 +42,11 @@ export async function scrapeAndStoreProduct(prodUrl: string) {
                 averagePrice: (scrapedProduct.currentPrice + existingProduct.averagePrice) / 2
             }
         }
+
         const newProduct = await Product.findOneAndUpdate({ url: scrapedProduct.url },
-                product,
-                { upsert: true, new: true }  // upsert means if the document doesn't exist, it will be created. new: true means return the updated document.
+            product,
+            { upsert: true, new: true }  // upsert means if the document doesn't exist, it will be created. new: true means return the updated document.
         )
-
-
 
             // if we dont revalidate the path, nextjs wont be autmatically update it and we will 
             // stuck in loop.
@@ -106,9 +106,7 @@ export async function addUserEmailToProduct(prodId: string, emailId: string){
     try {
         const product = await Product.findById(prodId)
 
-        console.log(product, "product")
-
-        if (!product) return
+        if (!product) return console.log("Product not found")
 
         const existingUser = product.users?.some((user: User) => user.email === emailId)
         console.log(existingUser, "existingUser")

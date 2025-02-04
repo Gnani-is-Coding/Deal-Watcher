@@ -4,10 +4,10 @@ let isConnected = false
 
 export const connectToDB = async () => {
     mongoose.set('strictQuery', true) // to prevent unknow field queries.
-    if (isConnected) console.log("Mongose connection already established")
+    if (isConnected) return console.log("Mongose connection already established")
 
     if (!process.env.MONGODB_URI) {
-        console.log("MongoDb URI is not defined!!")
+        return console.log("MongoDb URI is not defined!!")
     }
 
     mongoose.connect(process.env.MONGODB_URI as string).then(() => { 
