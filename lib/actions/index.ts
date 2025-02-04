@@ -109,7 +109,6 @@ export async function addUserEmailToProduct(prodId: string, emailId: string){
         if (!product) return console.log("Product not found")
 
         const existingUser = product.users?.some((user: User) => user.email === emailId)
-        console.log(existingUser, "existingUser")
 
         if (!existingUser) {
             product.users?.push({email: emailId})
