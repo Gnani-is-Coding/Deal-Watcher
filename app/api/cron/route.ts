@@ -15,11 +15,9 @@ import { NextResponse } from "next/server"
 // 2. RUN A CRON JOB TO UPDATE THE PRODUCTS PERIODICALLY
 
 export async function GET() {
-    console.log("CRON JOB TRIGGERED")
     try {
         connectToDB()
-        const products = await Product.find({})
-
+        const products = await Product.find()
         if (!products) {
             throw new Error("No products found")
         }
@@ -54,9 +52,10 @@ export async function GET() {
                         title: newProduct.title,
                         url: newProduct.url,
                     }
-                    const emailContent = await generateEmailBody(productInfo, emailNotificationType)
+                    const emailContent = await generateEmailBody(productInfo, "LOWEST_PRICE")
 
                     const userEmailIds: string[] = newProduct.users.map((user: any) => user.email)
+                    console.log({title: newProduct.title, mailIds: userEmailIds}, "mailIds %%%%%%%%%%%%%%%%%%")
 
                     await sendEmail(emailContent, userEmailIds)
                 }
@@ -71,6 +70,6 @@ export async function GET() {
         })
 
     } catch (error: any) {
-        throw new Error("No products found, while performing CRON JOB :-", error.message)
+        throw new Error(`No products found, while performing CRON JOB :- ${error.message}`)
     }
 }
