@@ -11,7 +11,8 @@ const isValidateAmazonUrl = (url: string): boolean => {
       return true
     }
   }
-  catch(error){
+   
+  catch(error){  // eslint-disable-line
     return false
 
   }

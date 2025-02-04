@@ -71,6 +71,6 @@ export async function GET() {
         })
 
     } catch (error: any) {
-        throw new Error("No products found, while performing CRON JOB")
+        throw new Error("No products found, while performing CRON JOB :-", error.message)
     }
 }
