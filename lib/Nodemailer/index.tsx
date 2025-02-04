@@ -85,8 +85,7 @@ const transport = nodemailer.createTransport({
   auth: {
     user: 'gnanendragariminti@gmail.com',
     pass: process.env.GMAIL_PASSWORD,
-  },
-  maxConnections: 1
+  }
 })
   
 // #TODO add Email sent animation or status updated message.
