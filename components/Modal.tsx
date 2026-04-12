@@ -1,64 +1,125 @@
+"use client"
+
 import Image from 'next/image'
 import React, { FormEvent, useEffect } from 'react'
 
 type IProps = {
     isOpen: boolean,
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setOpenModal: () => void,
     isLoading: boolean,
     setInputEmail: React.Dispatch<React.SetStateAction<string>>,
     inputEmail: string,
-    handleEmailSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>
+    handleEmailSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>,
+    isSuccess: boolean,
+    error: string,
 }
-function Modal({isOpen, setOpenModal, isLoading, setInputEmail, inputEmail, handleEmailSubmit}: IProps) {
 
+function Modal({ isOpen, setOpenModal, isLoading, setInputEmail, inputEmail, handleEmailSubmit, isSuccess, error }: IProps) {
+
+    // Close on Escape
     useEffect(() => {
-        const handleKeyDown = (e: any) => {
-            if (e.key === 'Escape') {
-                setOpenModal(false)
-            }
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setOpenModal()
         }
-
         window.addEventListener('keydown', handleKeyDown)
-
-        return () =>  window.removeEventListener('keydown', handleKeyDown)
-            
+        return () => window.removeEventListener('keydown', handleKeyDown)
     }, [])
 
+    // Auto-close 3s after success
+    useEffect(() => {
+        if (!isSuccess) return
+        const timer = setTimeout(() => setOpenModal(), 3000)
+        return () => clearTimeout(timer)
+    }, [isSuccess])
+
+    if (!isOpen) return null
+
     return (
-        isOpen ? (
-            <>    
-            <div onClick={() => setOpenModal(false)} className= "fixed top-0 left-0 bg-black h-[100%] w-[100%] flex justify-center items-center z-50 opacity-70">
-            </div>
-            <div className="fixed flex flex-col flex-1 min-w-[290px] max-w-[400px] z-[100] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] 
-             bg-white rounded-lg p-6 gap-3">
-        
-                    <div className='flex justify-between w-full items-center'>
-                        <div className='border border-grey-500 p-3 rounded-xl'>
-                        <Image src="/assets/icons/star.svg" height={20} width={20} alt="logo"/>
+        <>
+            {/* Backdrop */}
+            <div
+                onClick={setOpenModal}
+                className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center"
+            />
+
+            {/* Modal panel */}
+            <div className="fixed flex flex-col min-w-[290px] max-w-[400px] w-[90vw] z-[100] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl p-6 gap-4"
+                style={{
+                    background: "rgba(18,18,28,0.97)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    backdropFilter: "blur(24px)",
+                    boxShadow: "0 8px 40px rgba(0,0,0,0.6)",
+                }}
+            >
+                {isSuccess ? (
+                    /* ── Success state ── */
+                    <div className="flex flex-col items-center gap-4 py-4 text-center">
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center"
+                            style={{ background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)" }}
+                        >
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                <path d="M5 13l4 4L19 7" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
                         </div>
-                        <button onClick ={() => setOpenModal(false)} type="button" className='cursor-pointer hover:bg-color-[#333]'>
-                            <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier"> <circle cx="12" cy="12" r="10" stroke="#1C274C" stroke-width="1.5"></circle> <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
-                        </button>
+                        <h2 className="text-xl font-semibold text-text-primary">You&apos;re all set!</h2>
+                        <p className="text-sm text-text-secondary">
+                            We&apos;ll notify you at{' '}
+                            <span className="text-accent-purple font-medium">{inputEmail}</span>{' '}
+                            whenever the price drops.
+                        </p>
+                        <p className="text-xs text-text-muted mt-1">Closing automatically…</p>
                     </div>
-        
-                    <h2 className='font-semibold text-secondary text-lg'>Stay updated with the product pricing alerts roght in your inbox!</h2>
-                    <p className='text-sm text-gray-500'>Never miss a bargain again with our timely alerts!</p>
-        
-                    <form className='flex flex-col gap-2' onSubmit = { handleEmailSubmit} >
-                        <label htmlFor="email" className='font-medium text-sm text-gray-700'>Email address</label>
-                        <div className="flex gap-2 border-2 border-grey-600 rounded-3xl p-3 px-4">
-                            <span><svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 7.00005L10.2 11.65C11.2667 12.45 12.7333 12.45 13.8 11.65L20 7" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <rect x="3" y="5" width="18" height="14" rx="2" stroke="#000000" stroke-width="2" stroke-linecap="round"></rect> </g></svg> </span>
-                            <input type="email" id="email" className="w-full border-none outline-none" 
-                            placeholder='gnanendragariminti@gmail.com' value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} />
+                ) : (
+                    /* ── Form state ── */
+                    <>
+                        <div className="flex justify-between w-full items-center">
+                            <div className="p-3 rounded-xl border border-glass-border"
+                                style={{ background: "rgba(255,255,255,0.06)" }}>
+                                <Image src="/assets/icons/star.svg" height={20} width={20} alt="star" style={{ filter: "invert(1)" }} />
+                            </div>
+                            <button onClick={setOpenModal} type="button" className="cursor-pointer text-text-secondary hover:text-text-primary transition-colors">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+                                    <path d="M14.5 9.5L9.5 14.5M9.5 9.5L14.5 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                </svg>
+                            </button>
                         </div>
-                        <button className='btn my-4' type="submit">{isLoading ? 'Submitting...' :'Track Product' }</button>
-                    </form>
-        
+
+                        <h2 className="font-semibold text-text-primary text-lg">
+                            Stay updated with price alerts right in your inbox!
+                        </h2>
+                        <p className="text-sm text-text-secondary">Never miss a bargain again with our timely alerts!</p>
+
+                        <form className="flex flex-col gap-3" onSubmit={handleEmailSubmit}>
+                            <label htmlFor="email" className="font-medium text-sm text-text-secondary">
+                                Email address
+                            </label>
+                            <div className="flex gap-2 rounded-2xl p-3 px-4 border border-glass-border"
+                                style={{ background: "rgba(255,255,255,0.04)" }}
+                            >
+                                <Image src="/assets/icons/mail.svg" width={20} height={20} alt="mail" style={{ filter: "invert(0.6)" }} />
+                                <input
+                                    type="email"
+                                    id="email"
+                                    className="w-full bg-transparent border-none outline-none text-sm text-text-primary placeholder:text-text-muted"
+                                    placeholder="you@example.com"
+                                    value={inputEmail}
+                                    onChange={(e) => setInputEmail(e.target.value)}
+                                />
+                            </div>
+
+                            {error && (
+                                <p className="text-xs text-red-400 px-1">{error}</p>
+                            )}
+
+                            <button className="btn mt-2" type="submit" disabled={isLoading || !inputEmail}>
+                                {isLoading ? 'Submitting…' : 'Track Product'}
+                            </button>
+                        </form>
+                    </>
+                )}
             </div>
-            </>
-        ) : null
+        </>
     )
 }
 

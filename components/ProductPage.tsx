@@ -19,18 +19,38 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [isLoading, setLoading] = useState<boolean>(false)
     const [inputEmail, setInputEmail] = useState('')
+    const [isSuccess, setIsSuccess] = useState(false)
+    const [submitError, setSubmitError] = useState('')
 
     const handleEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
+        setSubmitError('')
 
-        await fetch(`/api/products/${prodId}/subscribe`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: inputEmail }),
-        })
+        try {
+            const res = await fetch(`/api/products/${prodId}/subscribe`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: inputEmail }),
+            })
+            const json = await res.json()
+
+            if (!res.ok || !json.success) {
+                setSubmitError(json.error ?? 'Something went wrong. Please try again.')
+            } else {
+                setIsSuccess(true)
+            }
+        } catch {
+            setSubmitError('Network error. Please try again.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleCloseModal = () => {
         setOpenModal(false)
-        setLoading(false)
+        setIsSuccess(false)
+        setSubmitError('')
         setInputEmail('')
     }
 
@@ -125,6 +145,7 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
                             />
                         </div>
                         <button className='btn my-8' onClick={() => setOpenModal(true)}>Track</button>
+
                     </div>
 
                 </div>
@@ -157,10 +178,15 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
                     </div>
                 )}
             </div>
-            <Modal isOpen={openModal} setOpenModal={setOpenModal} 
-            isLoading={isLoading}
-            inputEmail={inputEmail} setInputEmail={setInputEmail}
-            handleEmailSubmit={handleEmailSubmit}
+            <Modal
+                isOpen={openModal}
+                setOpenModal={handleCloseModal}
+                isLoading={isLoading}
+                inputEmail={inputEmail}
+                setInputEmail={setInputEmail}
+                handleEmailSubmit={handleEmailSubmit}
+                isSuccess={isSuccess}
+                error={submitError}
             />
         </>
 
