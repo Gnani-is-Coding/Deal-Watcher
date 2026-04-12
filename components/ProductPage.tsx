@@ -13,7 +13,7 @@ import { addUserEmailToProduct } from '@/lib/actions'
 
 type Props = {
     prodId: string,
-    productDetails: ProductType,
+    productDetails: ProductType | null,
     similarProducts: ProductType[]
 }
 function ProductPage({ prodId, productDetails, similarProducts }: Props) {

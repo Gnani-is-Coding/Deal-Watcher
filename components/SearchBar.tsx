@@ -1,6 +1,7 @@
 "use client"
 
 import { scrapeAndStoreProduct } from "@/lib/actions"
+import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
 
 const isValidateAmazonUrl = (url: string): boolean => {
@@ -22,6 +23,7 @@ const isValidateAmazonUrl = (url: string): boolean => {
 function SearchBar() {
   const [inputPrompt, setSearchPrompt] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const router = useRouter()
 
   const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -32,9 +34,12 @@ function SearchBar() {
 
     try{
       setIsLoading(true)
-      await scrapeAndStoreProduct(inputPrompt)
+      const productId = await scrapeAndStoreProduct(inputPrompt)
+      if (productId) {
+        router.push(`/products/${productId}`)
+      }
     } catch(error: any){
-      console.log(`Error while searching for products ${error.message}`)
+      console.error(`Error while searching for products ${error.message}`)
     } finally {
       setIsLoading(false)
       setSearchPrompt("")
