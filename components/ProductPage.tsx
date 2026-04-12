@@ -9,7 +9,6 @@ import PriceInfoCard from './ProductInfo'
 import { formatNumber } from '@/lib/utils'
 import ProductCard from './ProductCard'
 import Modal from './Modal'
-import { addUserEmailToProduct } from '@/lib/actions'
 
 type Props = {
     prodId: string,
@@ -20,14 +19,38 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [isLoading, setLoading] = useState<boolean>(false)
     const [inputEmail, setInputEmail] = useState('')
+    const [isSuccess, setIsSuccess] = useState(false)
+    const [submitError, setSubmitError] = useState('')
 
     const handleEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
+        setSubmitError('')
 
-        await addUserEmailToProduct(prodId, inputEmail)
+        try {
+            const res = await fetch(`/api/products/${prodId}/subscribe`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: inputEmail }),
+            })
+            const json = await res.json()
+
+            if (!res.ok || !json.success) {
+                setSubmitError(json.error ?? 'Something went wrong. Please try again.')
+            } else {
+                setIsSuccess(true)
+            }
+        } catch {
+            setSubmitError('Network error. Please try again.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleCloseModal = () => {
         setOpenModal(false)
-        setLoading(false)
+        setIsSuccess(false)
+        setSubmitError('')
         setInputEmail('')
     }
 
@@ -39,15 +62,17 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
         <>
             <div className='product-container'>
 
-                <Image src={productDetails.image} alt={productDetails.title} width={578} height={578}
-                    className='border border-gray-300 rounded-lg shadow' />
+                <div className='product-image flex items-center justify-center'>
+                    <Image src={productDetails.image} alt={productDetails.title} width={578} height={578}
+                        className='object-contain max-h-[500px]' />
+                </div>
 
 
                 <div className='flex flex-col gap-6'>
                     <div className='flex gap-3 flex-wrap items-start'>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-lg text-secondary'>{productDetails.title}</p>
-                            <Link href={productDetails.url} target="_blank" className="opacity-50 text-black">Visit here...</Link>
+                            <p className='font-semibold text-lg text-text-primary'>{productDetails.title}</p>
+                            <Link href={productDetails.url} target="_blank" className="text-text-muted hover:text-accent-purple transition-colors duration-200">Visit here...</Link>
                         </div>
 
                         <div className='flex justify-center gap-3'>
@@ -58,15 +83,17 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
                                     width={20}
                                     height={20}
                                 />
-                                <p className="text-base font-semibold text-[red]">{productDetails.reviewsCount}</p>
+                                <p className="text-base font-semibold text-accent-red">{productDetails.reviewsCount}</p>
                             </div>
 
-                            <div className='p-2 bg-white-200 rounded-10'>
-                                <Image src="/assets/icons/bookmark.svg" width={20} height={20} alt="bookmark" />
+                            <div className='p-2 rounded-10 border border-glass-border hover:border-accent-purple transition-colors duration-200 cursor-pointer'
+                                style={{ background: "rgba(255,255,255,0.06)" }}>
+                                <Image src="/assets/icons/bookmark.svg" width={20} height={20} alt="bookmark" style={{ filter: "invert(1)" }} />
                             </div>
 
-                            <div className='p-2 bg-white-200 rounded-10'>
-                                <Image src="/assets/icons/share.svg" width={20} height={20} alt="share" />
+                            <div className='p-2 rounded-10 border border-glass-border hover:border-accent-purple transition-colors duration-200 cursor-pointer'
+                                style={{ background: "rgba(255,255,255,0.06)" }}>
+                                <Image src="/assets/icons/share.svg" width={20} height={20} alt="share" style={{ filter: "invert(1)" }} />
                             </div>
                         </div>
 
@@ -74,8 +101,8 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
 
                     <div className="product-info">
                         <div className='flex flex-col'>
-                            <p className='text-[34px] font-semibold'>{productDetails.currency}{formatNumber(productDetails.originalPrice)}</p>
-                            <p className='text-[21px] text-black opacity-50 line-through' >{productDetails.currency}{formatNumber(productDetails.originalPrice)}</p>
+                            <p className='text-[34px] font-semibold text-text-primary'>{productDetails.currency}{formatNumber(productDetails.originalPrice)}</p>
+                            <p className='text-[21px] text-text-muted line-through'>{productDetails.currency}{formatNumber(productDetails.originalPrice)}</p>
                         </div>
                     </div>
 
@@ -87,11 +114,11 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
                             </div>
 
                             <div className="product-reviews">
-                                <Image src="/assets/icons/comment.svg" alt="reviews" width={16} height={16} />
-                                <p className='text-sm text-secondary font-semibold'>23 Reviews</p>
+                                <Image src="/assets/icons/comment.svg" alt="reviews" width={16} height={16} style={{ filter: "invert(1)" }} />
+                                <p className='text-sm text-text-secondary font-semibold'>23 Reviews</p>
                             </div>
                         </div>
-                        <p className='text-sm text-black opacity-50'><span className='text-primary-green font-bold'>93%</span>of buyers have recommended this.</p>
+                        <p className='text-sm text-text-secondary'><span className='text-primary-green font-bold'>93%</span> of buyers have recommended this.</p>
                     </div>
 
                     <div className='flex flex-col gap-5'>
@@ -118,13 +145,14 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
                             />
                         </div>
                         <button className='btn my-8' onClick={() => setOpenModal(true)}>Track</button>
+
                     </div>
 
                 </div>
 
                 <div className="flex flex-col gap-16">
                     <div className='flex flex-col gap-3'>
-                        <h2 className='text-2xl font-semibold text-secondary'>Product Description</h2>
+                        <h2 className='text-2xl font-semibold text-text-primary'>Product Description</h2>
                     </div>
 
                     <div className='flex flex-col gap-4'>
@@ -150,10 +178,15 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
                     </div>
                 )}
             </div>
-            <Modal isOpen={openModal} setOpenModal={setOpenModal} 
-            isLoading={isLoading}
-            inputEmail={inputEmail} setInputEmail={setInputEmail}
-            handleEmailSubmit={handleEmailSubmit}
+            <Modal
+                isOpen={openModal}
+                setOpenModal={handleCloseModal}
+                isLoading={isLoading}
+                inputEmail={inputEmail}
+                setInputEmail={setInputEmail}
+                handleEmailSubmit={handleEmailSubmit}
+                isSuccess={isSuccess}
+                error={submitError}
             />
         </>
 

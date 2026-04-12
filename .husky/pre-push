@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+# Husky pre-push hook
+# Regenerates .env.example with stripped values before every push.
+
+echo "[husky] Running strip-env before push..."
+bash scripts/strip-env.sh
+
+# Stage .env.example if it changed so the push includes the latest template
+if ! git diff --quiet .env.example 2>/dev/null; then
+  echo "[husky] .env.example updated — staging it..."
+  git add .env.example
+fi
