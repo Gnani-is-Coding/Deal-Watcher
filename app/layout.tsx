@@ -11,6 +11,10 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "DealWatcher",
   description: "track product prices effortlessly and save money on your online shopping",
+  icons: {
+    icon: "/assets/icons/logo.svg",
+    shortcut: "/assets/icons/logo.svg",
+  },
 };
 
 export default function RootLayout({

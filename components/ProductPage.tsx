@@ -9,7 +9,6 @@ import PriceInfoCard from './ProductInfo'
 import { formatNumber } from '@/lib/utils'
 import ProductCard from './ProductCard'
 import Modal from './Modal'
-import { addUserEmailToProduct } from '@/lib/actions'
 
 type Props = {
     prodId: string,
@@ -25,7 +24,11 @@ function ProductPage({ prodId, productDetails, similarProducts }: Props) {
         e.preventDefault()
         setLoading(true)
 
-        await addUserEmailToProduct(prodId, inputEmail)
+        await fetch(`/api/products/${prodId}/subscribe`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: inputEmail }),
+        })
         setOpenModal(false)
         setLoading(false)
         setInputEmail('')

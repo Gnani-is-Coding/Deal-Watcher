@@ -1,6 +1,5 @@
 "use client"
 
-import { searchProducts } from "@/lib/actions"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
@@ -50,8 +49,9 @@ function NavSearchBar() {
 
     debounceRef.current = setTimeout(async () => {
       setIsLoading(true)
-      const data = await searchProducts(query)
-      setResults(data)
+      const res = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`)
+      const json = await res.json()
+      setResults(json.data ?? [])
       setIsLoading(false)
     }, 300)
 

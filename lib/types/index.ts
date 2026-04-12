@@ -23,6 +23,7 @@ export type ProductType = {
     highestPrice: number,
     averagePrice: number,
     image: string,
+    images?: string[],
     users?: []
 }
 
