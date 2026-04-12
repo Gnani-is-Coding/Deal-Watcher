@@ -88,7 +88,6 @@ const transport = nodemailer.createTransport({
   }
 })
   
-// #TODO add Email sent animation or status updated message.
 export const sendEmail = async (emailContent: EmailContent, sendTo: string[]) => {
   const mailOptions = {
     from: 'gnanendragariminti@gmail.com',
