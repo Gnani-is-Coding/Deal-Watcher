@@ -13,15 +13,15 @@ import { generateEmailBody, sendEmail } from "../Nodemailer";
     */
 }
 
-
 export async function scrapeAndStoreProduct(prodUrl: string) {
   if (!prodUrl) return;
 
   try {
     connectToDB();
-    const existingProduct = await Product.findOne({ url: scrapedProduct.url });
 
     const scrapedProduct = await scrapeAmazonProduct(prodUrl);
+    const existingProduct = await Product.findOne({ url: prodUrl });
+
     if (!scrapedProduct) {
       console.warn("Didnt found any product in amazon");
       return;
@@ -38,7 +38,6 @@ export async function scrapeAndStoreProduct(prodUrl: string) {
          */
     }
     if (existingProduct) {
-
       const updatedPriceHistory = [
         ...existingProduct.priceHistory,
         { price: scrapedProduct.currentPrice },
@@ -115,6 +114,26 @@ export async function getSimilarProducts(prodId: string) {
     return JSON.parse(JSON.stringify(similarProduct));
   } catch (e: any) {
     console.log(`Error while getting similar products: ${e.message}`);
+  }
+}
+
+export async function searchProducts(query: string) {
+  if (!query || query.trim().length < 2) return [];
+
+  try {
+    connectToDB();
+
+    const results = await Product.find({
+      title: { $regex: query.trim(), $options: "i" },
+    })
+      .select("_id title image currentPrice")
+      .limit(6)
+      .lean();
+
+    return JSON.parse(JSON.stringify(results));
+  } catch (e: any) {
+    console.error(`Error while searching products: ${e.message}`);
+    return [];
   }
 }
 

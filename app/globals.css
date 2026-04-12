@@ -11,37 +11,50 @@
 
 @layer base {
   body {
-    @apply font-inter;
+    @apply font-spaceGrotesk bg-surface-bg text-text-primary;
   }
 }
 
 @layer utilities {
+
+  /* ─── BUTTONS ──────────────────────────────────────────────────── */
   .btn {
-    @apply py-4 px-4 bg-secondary hover:bg-opacity-70 rounded-[30px] text-white text-lg font-semibold;
+    @apply py-3 px-6 rounded-[30px] text-white text-base font-semibold
+           border border-glass-border
+           hover:opacity-90 transition-all duration-200;
+    background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+    box-shadow: 0 0 30px rgba(139,92,246,0.3);
   }
 
+  /* ─── TYPOGRAPHY ────────────────────────────────────────────────── */
   .head-text {
-    @apply mt-4 text-6xl leading-[72px] font-bold tracking-[-1.2px] text-gray-900;
+    @apply mt-4 text-4xl sm:text-5xl xl:text-6xl leading-tight xl:leading-[72px] font-bold tracking-[-1.2px] text-text-primary;
   }
 
   .section-text {
-    @apply text-secondary text-[32px] font-semibold;
+    @apply text-text-primary text-[32px] font-semibold;
   }
 
   .small-text {
-    @apply flex gap-2 text-sm font-medium text-primary;
+    @apply flex gap-2 text-sm font-medium text-accent-purple;
   }
 
   .paragraph-text {
-    @apply text-xl leading-[30px] text-gray-600;
+    @apply text-xl leading-[30px] text-text-secondary;
   }
 
+  /* ─── HERO CAROUSEL ─────────────────────────────────────────────── */
   .hero-carousel {
-    @apply relative sm:px-10 py-5 sm:pt-20 pb-5 max-w-[560px] h-[700px] w-full bg-[#F2F4F7] rounded-[30px] sm:mx-auto;
+    @apply relative sm:px-10 py-5 sm:pt-20 pb-5 w-full max-w-[560px] h-[400px] sm:h-[560px] xl:h-[700px] rounded-[30px] mx-auto
+           border border-glass-border;
+    background: rgba(255, 255, 255, 0.05);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 60%);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.10);
   }
 
   .carousel {
-    @apply flex flex-col-reverse h-[700px];
+    @apply flex flex-col-reverse h-[400px] sm:h-[560px] xl:h-[700px];
   }
 
   .carousel .control-dots {
@@ -49,109 +62,163 @@
   }
 
   .carousel .control-dots .dot {
-    @apply w-[10px] h-[10px] bg-[#D9D9D9] rounded-full bottom-0 !important;
+    @apply w-[10px] h-[10px] rounded-full bottom-0 !important;
+    background: rgba(255,255,255,0.25) !important;
+    box-shadow: none !important;
   }
 
   .carousel .control-dots .dot.selected {
-    @apply bg-[#475467] !important;
+    background: rgba(139,92,246,0.9) !important;
   }
 
+  /* ─── SECTIONS ──────────────────────────────────────────────────── */
   .trending-section {
-    @apply flex flex-col gap-10 px-6 md:px-20 py-24;
+    @apply flex flex-col gap-10 px-6 md:px-20 py-12 md:py-24;
   }
 
-  /* PRODUCT DETAILS PAGE STYLES */
+  /* ─── PRODUCT DETAIL PAGE ───────────────────────────────────────── */
   .product-container {
     @apply flex flex-col gap-1 flex-wrap px-6 md:px-20 py-24;
   }
 
   .product-image {
-    @apply flex-grow xl:max-w-[50%] max-w-full py-16 border border-[#CDDBFF] rounded-[17px];
+    @apply flex-grow xl:max-w-[50%] max-w-full py-16 rounded-[17px] border border-glass-border;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.10);
   }
 
   .product-info {
-    @apply flex items-center flex-wrap gap-10 py-6 border-y border-y-[#E4E4E4];
+    @apply flex items-center flex-wrap gap-10 py-6;
+    border-top: 1px solid rgba(255,255,255,0.10);
+    border-bottom: 1px solid rgba(255,255,255,0.10);
   }
 
   .product-hearts {
-    @apply flex items-center gap-2 px-3 py-2 bg-[#FFF0F0] rounded-10;
+    @apply flex items-center gap-2 px-3 py-2 rounded-10 border border-glass-border;
+    background: rgba(248, 113, 113, 0.12);
   }
 
   .product-stars {
-    @apply flex items-center gap-2 px-3 py-2 bg-[#FBF3EA] rounded-[27px];
+    @apply flex items-center gap-2 px-3 py-2 rounded-[27px] border border-glass-border;
+    background: rgba(212, 141, 59, 0.12);
   }
 
   .product-reviews {
-    @apply flex items-center gap-2 px-3 py-2 bg-white-200 rounded-[27px];
+    @apply flex items-center gap-2 px-3 py-2 rounded-[27px] border border-glass-border;
+    background: rgba(255,255,255,0.06);
   }
 
-  /* MODAL */
+  /* ─── MODAL ──────────────────────────────────────────────────────── */
   .dialog-container {
-    @apply fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-60;
+    @apply fixed inset-0 z-10 overflow-y-auto;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
   }
 
   .dialog-content {
-    @apply p-6  bg-white inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform  shadow-xl rounded-2xl;
+    @apply p-6 inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle
+           transition-all transform rounded-2xl border border-glass-border;
+    background: rgba(18, 18, 30, 0.88);
+    backdrop-filter: blur(40px);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 60%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
   }
 
   .dialog-head_text {
-    @apply text-secondary text-lg leading-[24px] font-semibold mt-4;
+    @apply text-text-primary text-lg leading-[24px] font-semibold mt-4;
   }
 
   .dialog-input_container {
-    @apply px-5 py-3 mt-3 flex items-center gap-2 border border-gray-300 rounded-[27px];
+    @apply px-5 py-3 mt-3 flex items-center gap-2 rounded-[27px] border border-glass-border;
+    background: rgba(255,255,255,0.06);
   }
 
   .dialog-input {
-    @apply flex-1 pl-1 border-none text-gray-500 text-base focus:outline-none border border-gray-300 rounded-[27px] shadow-xs;
+    @apply flex-1 pl-1 border-none text-text-primary text-base focus:outline-none bg-transparent;
   }
 
   .dialog-btn {
-    @apply px-5 py-3 text-white text-base font-semibold border border-secondary bg-secondary rounded-lg mt-8;
+    @apply px-5 py-3 text-white text-base font-semibold rounded-lg mt-8
+           border border-glass-border;
+    background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+    box-shadow: 0 0 30px rgba(139,92,246,0.3);
   }
 
-  /* NAVBAR */
+  /* ─── NAVBAR ─────────────────────────────────────────────────────── */
   .nav {
     @apply flex justify-between items-center px-6 md:px-20 py-4;
   }
 
   .nav-logo {
-    @apply font-spaceGrotesk text-[21px] text-secondary font-bold;
+    @apply font-spaceGrotesk text-[21px] text-text-primary font-bold;
   }
 
-  /* PRICE INFO */
+  /* ─── PRICE INFO CARD ────────────────────────────────────────────── */
   .price-info_card {
-    @apply flex-1 min-w-[200px] flex flex-col gap-2 border-l-[3px] rounded-10 bg-white-100 px-5 py-4;
+    @apply flex-1 min-w-[200px] flex flex-col gap-2 rounded-10 px-5 py-4
+           border border-glass-border;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.10);
+    border-left-width: 3px;
+    border-left-color: rgba(139,92,246,0.6);
   }
 
-  /* PRODUCT CARD */
+  /* ─── PRODUCT CARD ───────────────────────────────────────────────── */
   .product-card {
-    @apply sm:w-[292px] sm:max-w-[292px] w-full flex-1 flex flex-col gap-4 rounded-md;
+    @apply w-full flex flex-col gap-4 rounded-2xl
+           border border-glass-border
+           hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 60%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .product-card:hover {
+    box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 0 30px rgba(139,92,246,0.2), inset 0 1px 0 rgba(255,255,255,0.12);
   }
 
   .product-card_img-container {
-    @apply flex-1 relative flex flex-col gap-5 p-4 rounded-md;
+    @apply flex-1 relative flex flex-col gap-5 p-4 rounded-xl;
   }
 
   .product-card_img {
-    @apply max-h-[250px] object-contain w-full h-full bg-transparent;
+    @apply max-h-[140px] sm:max-h-[200px] xl:max-h-[250px] object-contain w-full h-full bg-transparent;
   }
 
   .product-title {
-    @apply text-secondary text-xl leading-6 font-semibold truncate;
+    @apply text-text-primary text-xl leading-6 font-semibold truncate;
   }
 
-  /* SEARCHBAR INPUT */
+  /* ─── SEARCH BAR ─────────────────────────────────────────────────── */
   .searchbar-input {
-    @apply flex-1 min-w-[200px] w-full p-3 border border-gray-300 rounded-lg shadow-xs text-base text-gray-500 focus:outline-none;
+    @apply flex-1 min-w-[200px] w-full p-3 rounded-lg text-base text-text-primary
+           focus:outline-none border border-glass-border
+           placeholder:text-text-muted transition-all duration-200;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+  }
+
+  .searchbar-input:focus {
+    border-color: rgba(139,92,246,0.6);
+    box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
   }
 
   .searchbar-btn {
-    @apply bg-gray-900 border border-gray-900 rounded-lg shadow-xs px-5 py-3 text-white text-base font-semibold hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40;
+    @apply rounded-lg px-5 py-3 text-white text-base font-semibold
+           hover:opacity-90 transition-all duration-200
+           disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40;
+    background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+    border: 1px solid rgba(139,92,246,0.4);
+    box-shadow: 0 0 30px rgba(139,92,246,0.25);
   }
 
-  /* Modal Styes*/
+  /* ─── MODAL (legacy class) ───────────────────────────────────────── */
   .modal {
-    @apply  bg-white shadow-lg rounded-xl; 
+    @apply rounded-xl border border-glass-border;
+    background: rgba(18, 18, 30, 0.85);
+    backdrop-filter: blur(40px);
   }
 }

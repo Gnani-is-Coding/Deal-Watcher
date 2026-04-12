@@ -1,4 +1,5 @@
 import { ProductType } from '@/lib/types'
+import { formatNumber } from '@/lib/utils'
 import Image from 'next/image';
 import Link from 'next/link'
 import React from 'react'
@@ -17,12 +18,12 @@ function ProductCard({product}: Iprops) {
               {product.title}
             </h3>
 
-            <div className='flex justify-between w-full'>
-              <p className='text-black opacity-50 text-lg capitalize'>{product.category}</p>
-              <p className='font-semibold text-lg'>
+            <div className='flex justify-between items-center w-full gap-2'>
+              <p className='text-text-muted text-sm capitalize truncate min-w-0'>{product.category}</p>
+              <p className='font-bold text-base text-white shrink-0'>
                 <span>{product.currency}</span>
-                <span>{product.currentPrice}</span>
-                </p>
+                <span>{formatNumber(product.currentPrice)}</span>
+              </p>
             </div>
         </div>
        
